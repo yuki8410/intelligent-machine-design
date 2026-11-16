@@ -1,0 +1,29 @@
+# 公開するのはソースコードと修正記録だけ。
+# それ以外（レポート、提出用アーカイブ、実験結果）は既定で除外する。
+/*
+!/.gitignore
+!/README.md
+
+!/BackPropergation/
+/BackPropergation/*
+!/BackPropergation/src/
+!/BackPropergation/修正記録.md
+
+!/RGA/
+/RGA/*
+!/RGA/src/
+
+# src の中で除外するもの
+*.orig
+*.o
+*.csv
+*.log
+*.png
+*.tar.xz
+.venv/
+.vscode/
+/BackPropergation/src/backprop
+/RGA/src/rga
+/RGA/src/results/
+/RGA/src/graphs/
+/RGA/src/summary_log.txt
