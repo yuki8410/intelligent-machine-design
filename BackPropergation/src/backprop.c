@@ -5,14 +5,13 @@
 #include <stdlib.h>
 
 #define SEED 0 // 乱数初期化用のシード値
-#define unlinkey(x) (__builtin_expect(!!(x), 0))
+#define unlikely(x) (__builtin_expect(!!(x), 0))
 
 void (*init_rand)(long unsigned int) = init_genrand; // 乱数初期化関数
 double80 rand_double(double min, double max)
 {
-    if (unlinkey(!init_rand)) {
-        fprintf(stderr, "rand_double: init_rand is NULL, initializing with SEED %d\n", SEED);
-        init_rand(SEED);  // 乱数初期化
+    if (unlikely(init_rand)) {
+        init_rand(SEED);  // 初回呼び出し時のみ SEED で乱数を初期化
         init_rand = NULL; // 初期化後は NULL に設定
     }
     return (double80)genrand_real1() * (max - min) + min;
@@ -121,7 +120,7 @@ void bp_backward(bp_t *m, const double80 *target)
         double80 dy            = (y - target[i]) * output->nodes[i].funcs->derivative(y);
         output->nodes[i].delta = dy;
     }
-    // auto derivateve
+    // auto derivative
     for (size_t li = L - 1; li-- > 1;) {
         layer_t *cur       = &m->layers[li];
         layer_t *next      = &m->layers[li + 1];
@@ -131,7 +130,7 @@ void bp_backward(bp_t *m, const double80 *target)
             double80 sum_delta = 0.0;
             for (size_t j = 0; j < next->size; j++)
                 sum_delta += weights[i][j].value * next->nodes[j].delta;
-            cur->nodes[i].delta = sum_delta * cur->nodes[i].funcs->derivative(cur->nodes->result);
+            cur->nodes[i].delta = sum_delta * cur->nodes[i].funcs->derivative(cur->nodes[i].result);
         }
     }
     // printf("bp_backward: backward pass completed\n");
@@ -181,7 +180,9 @@ double80 *calculate_output(bp_t *m, const double80 *input)
     m->__forward(m, input);
     // 出力層の結果を返す
     layer_t *output_layer = &m->layers[m->size - 1];
-    double80 *output      = malloc(output_layer->size * sizeof(double));
+    double80 *output      = malloc(output_layer->size * sizeof(*output));
+    if (!output)
+        return NULL;
     for (size_t i = 0; i < output_layer->size; i++)
         output[i] = output_layer->nodes[i].result;
     return output;
