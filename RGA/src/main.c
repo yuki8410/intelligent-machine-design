@@ -51,8 +51,10 @@ int main(int argc, char *argv[])
                "be in [0, 1]");
         return EXIT_FAILURE;
     }
-    if (individuals < 3)
+    if (individuals < 3) {
         PR_ERR("Error: Number of individuals must be at least 3.");
+        return EXIT_FAILURE;
+    }
 
     if (individuals > 1000)
         PR_WARN("Warning: High number of individuals may lead to high memory usage.");

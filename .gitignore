@@ -12,6 +12,7 @@
 !/RGA/
 /RGA/*
 !/RGA/src/
+!/RGA/修正記録.md
 
 # src の中で除外するもの
 *.orig

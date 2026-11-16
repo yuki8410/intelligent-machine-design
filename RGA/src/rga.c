@@ -90,7 +90,8 @@ void update_rga(RGA *self)
     // This is a placeholder for the actual implementation
     PR_DEBUG("Updating RGA population...");
     // 1. Selection
-    sort_population(self);
+    if (!self->sorted)
+        sort_population(self);
     struct population *first = self->populations[0], *second = self->populations[1];
     PR_DEBUG("Selected individuals: %Lf, %Lf", first->fitness, second->fitness);
 
@@ -133,8 +134,8 @@ void update_rga(RGA *self)
         pop->fitness           = self->eval->evaluate(pop->x);
     }
     // 5. Sort the population after update
-    self->sorted = false; // Reset sorted flag after update
     sort_population(self);
+    self->sorted = true; // Reset sorted flag after update
 }
 
 void init_populations(RGA *self)
@@ -143,6 +144,7 @@ void init_populations(RGA *self)
         PR_ERR("RGA structure is NULL.\n");
         exit(EXIT_FAILURE);
     }
+    self->sorted = false; // Reset sorted flag when initializing populations
     if (self->populations != NULL) {
         free(self->populations);
         self->populations = NULL;

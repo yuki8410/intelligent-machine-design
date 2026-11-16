@@ -37,7 +37,7 @@ make
 
 詳しい使い方は [`RGA/src/README.MD`](RGA/src/README.MD) にあります。
 
-必要なもの：C23 対応の gcc、make。グラフを描く場合は gnuplot。
+必要なもの：gcc、make。グラフを描く場合は gnuplot。
 
 ```sh
 cd RGA/src
@@ -46,6 +46,8 @@ make
 ```
 
 `exp.sh` は個体数・交叉率・突然変異率の組み合わせをまとめて実行し、結果のCSVとグラフを作ります。
+
+提出後の修正内容は [`RGA/修正記録.md`](RGA/修正記録.md) にまとめています。
 
 ## クレジット
 
